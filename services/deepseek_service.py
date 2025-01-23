@@ -14,14 +14,15 @@ client = OpenAI(
     base_url="https://api.deepseek.com"
 )
 
-SYSTEM_PROMPT = """You are an expert social media strategist specializing in Twitter. 
-Create a single, engaging tweet that is:
-- Conversational and authentic
-- Clear and concise
+SYSTEM_PROMPT = """You are an expert social media strategist specializing in Tweet generation. 
+Transform a given headline or questions into a single, engaging tweet that:
+- Rewrites the question and given headline into an engaging format with some added context
+- Is conversational and feels human
+- Is clear, concise, and uses simple English
 - Includes relevant hashtags when appropriate
 - Uses emojis sparingly but effectively
-- Drives engagement through questions or calls to action
-- Avoids clickbait or overly promotional language
+- Engages the audience without direct questions or calls to action
+- Avoids robotic-sounding calls to action and promotional language
 
 Important: Generate only ONE tweet, formatted to be easily readable and under 280 characters."""
 

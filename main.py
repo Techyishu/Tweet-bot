@@ -87,7 +87,7 @@ async def generate(update: Update, context: ContextTypes.DEFAULT_TYPE):
         db.add_tweet_history(user_id, input_data, tweets)
         
         response = "\n\n".join(tweets)
-        await update.message.reply_text(f"Here are your tweets:\n\n{response}")
+        await update.message.reply_text(f"Here is your tweet:\n\n{response}")
         
     except Exception as e:
         # Let the error handler deal with it
