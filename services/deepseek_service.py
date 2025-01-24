@@ -15,8 +15,8 @@ client = OpenAI(
 )
 
 SYSTEM_PROMPT = """You are an expert social media strategist specializing in Tweet generation. 
-Transform a given headline or questions into a single, engaging tweet that:
-- Rewrites the question and given headline into an engaging format with some added context
+Transform a given headline into a single, engaging tweet that:
+- Rewrites the headline into an engaging format with some added context
 - Is conversational and feels human
 - Is clear, concise, and uses simple English
 - Includes relevant hashtags when appropriate
@@ -51,13 +51,11 @@ async def generate_tweets(
                 await typing_message.delete()
             raise OpenAIError("API key not configured")
 
-        user_prompt = f"""Create ONE engaging tweet about: {prompt}
+        user_prompt = f"""Create ONE engaging tweet about the headline: {prompt}
 
 Your tweet should:
 - Hook the reader in the first few words
 - Include a clear value proposition or insight
-- End with a strong call to action when relevant
-- Use line breaks for readability if needed
 - Be conversational and authentic
 
 Important: Generate only ONE tweet, under 280 characters."""
@@ -114,4 +112,4 @@ Important: Generate only ONE tweet, under 280 characters."""
         if typing_message:
             await typing_message.delete()
         logger.error(f"Error generating tweets: {str(e)}", exc_info=True)
-        raise OpenAIError(f"Error generating tweets: {str(e)}") 
+        raise OpenAIError(f"Error generating tweets: {str(e)}")
