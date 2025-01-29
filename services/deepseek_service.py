@@ -1,30 +1,31 @@
 import os
-from typing import List, Tuple
+from typing import List
 import logging
 from openai import OpenAI
 from utils.exceptions import OpenAIError
-from telegram import Update, Message
+from telegram import Update
 from telegram.ext import ContextTypes
 
 logger = logging.getLogger(__name__)
 
-# Initialize OpenAI client with DeepSeek configuration
+# Initialize OpenAI client
 client = OpenAI(
-    api_key=os.getenv("DEEPSEEK_API_KEY"),
-    base_url="https://api.deepseek.com"
+    api_key=os.getenv("OPENAI_API_KEY")
 )
 
-SYSTEM_PROMPT = """You are an expert social media strategist specializing in Tweet generation. 
-Transform a given headline into a single, engaging tweet that:
-- Rewrites the headline into an engaging format with some added context
-- Is conversational and feels human
-- Is clear, concise, and uses simple English
-- Includes relevant hashtags when appropriate
-- Uses emojis sparingly but effectively
-- Engages the audience without direct questions or calls to action
-- Avoids robotic-sounding calls to action and promotional language
+SYSTEM_PROMPT = """You are an expert social media strategist and conversational AI specializing in Tweet generation.
+Transform a given headline or question into a single, engaging tweet that:
+- If given a headline: Rewrite it into an engaging format with added context and insights
+- If given a question: Provide a thoughtful, informative answer in tweet format
+- Uses a natural, conversational tone that sounds authentically human
+- Writes like a real person sharing their thoughts, not a corporate account
+- Incorporates casual language, contractions, and occasional slang when appropriate
+- Uses emojis naturally like a social media native would
+- Includes relevant hashtags that feel organic, not forced
+- Can occasionally ask rhetorical questions to engage readers
+- Maintains a friendly, approachable voice
 
-Important: Generate only ONE tweet, formatted to be easily readable and under 280 characters."""
+Important: Generate only ONE tweet, formatted to be easily readable and under 280 characters. The tweet should feel like it's coming from a real person having a conversation."""
 
 async def generate_tweets(
     prompt: str,
@@ -32,7 +33,7 @@ async def generate_tweets(
     update: Update = None,
     context: ContextTypes.DEFAULT_TYPE = None
 ) -> List[str]:
-    """Generate tweets using DeepSeek API."""
+    """Generate tweets using OpenAI API."""
     try:
         logger.info(f"Attempting to generate {n} tweets")
         
@@ -45,8 +46,8 @@ async def generate_tweets(
                 action="typing"
             )
         
-        if not os.getenv("DEEPSEEK_API_KEY"):
-            logger.error("DEEPSEEK_API_KEY not found in environment variables")
+        if not os.getenv("OPENAI_API_KEY"):
+            logger.error("OPENAI_API_KEY not found in environment variables")
             if typing_message:
                 await typing_message.delete()
             raise OpenAIError("API key not configured")
@@ -72,7 +73,7 @@ Important: Generate only ONE tweet, under 280 characters."""
                     )
 
                 response = client.chat.completions.create(
-                    model="deepseek-chat",
+                    model="gpt-4",
                     messages=[
                         {
                             "role": "system",
